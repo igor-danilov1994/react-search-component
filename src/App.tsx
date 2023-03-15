@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
 import styled from '@emotion/styled';
 
 import './App.css';
-import { ResultSearch, Search } from './components';
-import { getData } from './moc-data';
+import { UserList, Search } from './components';
+import { AppDispatch, RootState } from "./redux/poviders/store/store";
+import { getUsers } from 'api/users/getUsersThunk';
+import { userActions } from "api/users/getUsersSlice";
+import { Loader } from "components/shared";
 
 const AppStyle = styled.div`
   display: flex;
@@ -12,56 +16,80 @@ const AppStyle = styled.div`
   justify-content: flex-start;
   align-items: center;
   margin-top: 20px;
-  margin-left: 20px;
+  width: 100%;
 `;
 
-function App() {
-  const [data, setData] = useState<string[]>([]);
-  const [searchValue, setSearchValue] = useState<string[]>([]);
+export const App = () =>  {
+  const [search, setSearch] = useState<string | null>(null)
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search');
-  const [search, setSearch] = useState<string | null>(searchQuery);
+  const { users, loading, error } = useSelector( (state: RootState) => state.users)
+  const [tempUsers, setTempUsers] = useState(users)
+  const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    if (!data.length) getList();
-  }, [data]);
-
-  async function getList() {
-    const resp = await getData();
-
-    if (resp) setData(resp.sort());
+  const getUserHandler = () => {
+    dispatch(getUsers())
   }
 
   useEffect(() => {
-    if (search && data) {
-      const res = data.filter((item, index) => item[0] === search[0]);
+      getUserHandler()
+  }, []);
 
-      setSearchValue(res);
-    } else {
-      setSearchValue([]);
+  useEffect(() => {
+      if (users) setTempUsers(users)
+  }, [users]);
+
+  useEffect( () => {
+    if (search && users){
+      const tempUsers = users.filter(({ name, username, email }) => {
+        return name.includes(search)
+          || username.includes(search)
+          || email.includes(search)
+      })
+      setTempUsers(tempUsers)
     }
-  }, [search, data]);
+  }, [search, users] )
 
-  const onChangeInput = (value: string | null) => {
+  const onChangeInput = (value: string | null, clear?: boolean) => {
     if (value) {
       setSearchParams({ ['search']: value });
     } else {
       searchParams.delete('search');
       setSearchParams(searchParams);
     }
+    if (clear){
+      getUserHandler()
+    }
+
     setSearch(value);
   };
 
+  const deleteUser = (id: number) => {
+    dispatch(userActions.deleteUser(id))
+  }
+
   return (
     <AppStyle>
-      <Search searchValue={searchQuery} onChangeInput={onChangeInput} />
-      {!!searchValue.length || !search?.length ? (
-        <ResultSearch searchResultList={searchValue} />
+      {loading ? (
+        <div className='loading'>
+          <Loader/>
+        </div>
       ) : (
-        <span>No result</span>
+        <>
+          <Search searchValue={searchQuery} onChangeInput={onChangeInput} />
+            {!!users.length ? (
+              <UserList
+                searchValue={searchQuery}
+                users={tempUsers}
+                deleteUser={deleteUser}/>
+          ) : (
+              <>
+                <span>No result</span>
+                {error && <span>{error}</span>}
+              </>
+            )}
+        </>
       )}
     </AppStyle>
   );
 }
-
-export default App;

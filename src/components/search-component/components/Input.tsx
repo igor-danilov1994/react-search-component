@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+
 import { useDebounce } from 'hooks/useDebounce';
 
 interface IProps {
   valueInput: string | null;
-  onChangeInput: (value: string | null) => void;
+  onChangeInput: (value: string | null, clear?: boolean) => void;
 }
 
 const InputStyle = styled.div`
@@ -25,6 +26,8 @@ const InputStyle = styled.div`
   }
 
   img {
+    background: none;
+    border: none;
     position: absolute;
     left: 0;
 
@@ -37,19 +40,39 @@ const InputStyle = styled.div`
   &:hover {
     color: white;
   }
+
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const Input: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
   const [value, setValue] = useState(valueInput);
-  const searchQuery = useDebounce(value, 1000);
+  // const searchQuery = useDebounce(value, 1000);
 
-  const onChangeHandler = (value: string | null) => {
+  const onChangeHandler = (value: string) => {
     setValue(value);
+
+    if (!value.length){
+      onChangeInput(null, true)
+    }
   };
 
-  useEffect(() => {
-    onChangeInput(searchQuery);
-  }, [searchQuery]);
+  // useEffect(() => {
+  //     onChangeInput(searchQuery)
+  // }, [searchQuery]);
+
+  useEffect( () => {
+    if (value){
+      onChangeInput(value)
+    }
+  }, [value] )
 
   return (
     <InputStyle>
@@ -59,7 +82,7 @@ export const Input: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
         onChange={(e) => onChangeHandler(e.target.value)}
         placeholder="search"
       />
-      <img onClick={() => onChangeHandler(null)} src="./close.svg" alt="icon" />
+      {value && <img onClick={() => onChangeInput(null, true)} src="./close.svg" alt="icon" />}
     </InputStyle>
   );
 };
