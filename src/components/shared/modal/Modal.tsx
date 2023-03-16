@@ -78,8 +78,6 @@ export const Modal: FC<ModalProps> = ({ children , isOpen, onClose }) => {
       onClose()
     }
 
-  console.log(151);
-
     return (
       <ModalStyle>
         <div className={`modal ${isOpen ? 'opened' : ''}`}>

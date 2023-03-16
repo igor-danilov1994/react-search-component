@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { useDebounce } from 'hooks/useDebounce';
 
 interface IProps {
-  value: string;
+  value: string | null;
   onChange: (value: string) => void;
   placeholder: string;
 }

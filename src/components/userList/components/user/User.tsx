@@ -1,9 +1,10 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import styled from "@emotion/styled";
 
 import { User } from "types";
 import { Modal } from 'components/shared';
 import { CloseBtn } from 'components/shared';
+import { replaceString } from 'utils';
 
 interface UserProps {
   user: User;
@@ -91,7 +92,7 @@ export const UserItem: FC<UserProps> = ({ user, deleteUser, searchValue }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { name, username, email, id, address, company } = user
 
-  const deleteUserItem = (id: number) => {
+  const deleteUserItem = () => {
     deleteUser(id)
   }
 
@@ -99,16 +100,12 @@ export const UserItem: FC<UserProps> = ({ user, deleteUser, searchValue }) => {
     setIsOpen(prev => !prev)
   }
 
-  const replaceStr = (temp: string) => {
-    let str = ''
-
-    if (searchValue) {
-      let regex = new RegExp(searchValue, "gi");
-      str = temp.replace(regex, '<strong class="slug">$&</strong>');
+  const replaceStringHelper = (temp: string | null) => {
+    if (searchValue && temp?.includes(searchValue)){
+      return replaceString(temp, searchValue)
+    } else {
+      return temp
     }
-    return (
-        <span dangerouslySetInnerHTML={{ __html: str }} />
-    )
   }
 
     return (
@@ -116,12 +113,12 @@ export const UserItem: FC<UserProps> = ({ user, deleteUser, searchValue }) => {
           <div className='user'>
             <div onClick={onToggleModal} className='user_body'>
               <p className='user_info'>
-                <span>{name.includes(`${searchValue}`) ? replaceStr(name) : name}</span>
-                <span>{username.includes(`${searchValue}`) ? replaceStr(username) : username}</span>
-                <span>{email.includes(`${searchValue}`) ? replaceStr(email) : email}</span>
+                <span>{replaceStringHelper(name)}</span>
+                <span>{replaceStringHelper(username)}</span>
+                <span>{replaceStringHelper(email)}</span>
               </p>
             </div>
-            <CloseBtn onClick={() => deleteUserItem(id)}/>
+            <CloseBtn onClick={deleteUserItem}/>
           </div>
 
             {isOpen && (
@@ -133,7 +130,12 @@ export const UserItem: FC<UserProps> = ({ user, deleteUser, searchValue }) => {
                         <span>{`street - ${address.street}`}</span>
                         <span>{`company - ${company.name}`}</span>
                       </div>
-                      <button className='user_delete_btn' onClick={() => deleteUserItem(id)}>Delete this user</button>
+                      <button
+                        className='user_delete_btn'
+                        onClick={deleteUserItem}
+                      >
+                        Delete this user
+                      </button>
                     </div>
               </Modal>
             )}

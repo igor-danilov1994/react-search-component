@@ -69,10 +69,15 @@ export const SearchInput: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
     <InputStyle>
       <img src="./search.svg" alt="icon" />
       <Input
-        value={value ?? ''}
+        value={value}
         onChange={onChangeHandler}
         placeholder="search"/>
-      {value && <img onClick={() => onChangeHandler('')} src="./close.svg" alt="icon" />}
+      {value && (
+        <img
+          onClick={() => onChangeHandler('')}
+          src="./close.svg"
+          alt="icon" />
+      )}
     </InputStyle>
   );
 };
