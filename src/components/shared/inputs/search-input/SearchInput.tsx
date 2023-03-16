@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from "react";
 import styled from '@emotion/styled';
 
-import { useDebounce } from 'hooks/useDebounce';
+import { Input } from 'components/shared';
 
 interface IProps {
   valueInput: string | null;
@@ -52,9 +52,8 @@ const InputStyle = styled.div`
   }
 `;
 
-export const Input: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
+export const SearchInput: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
   const [value, setValue] = useState(valueInput);
-  // const searchQuery = useDebounce(value, 1000);
 
   const onChangeHandler = (value: string) => {
     setValue(value);
@@ -62,27 +61,18 @@ export const Input: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
     if (!value.length){
       onChangeInput(null, true)
     }
+
+    onChangeInput(value)
   };
-
-  // useEffect(() => {
-  //     onChangeInput(searchQuery)
-  // }, [searchQuery]);
-
-  useEffect( () => {
-    if (value){
-      onChangeInput(value)
-    }
-  }, [value] )
 
   return (
     <InputStyle>
       <img src="./search.svg" alt="icon" />
-      <input
+      <Input
         value={value ?? ''}
-        onChange={(e) => onChangeHandler(e.target.value)}
-        placeholder="search"
-      />
-      {value && <img onClick={() => onChangeInput(null, true)} src="./close.svg" alt="icon" />}
+        onChange={onChangeHandler}
+        placeholder="search"/>
+      {value && <img onClick={() => onChangeHandler('')} src="./close.svg" alt="icon" />}
     </InputStyle>
   );
 };

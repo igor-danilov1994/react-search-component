@@ -1,2 +1,2 @@
-export * from './search-component'
+export * from './shared'
 export * from './userList'

@@ -41,6 +41,12 @@ const UserListStyle = styled.div`
     &:hover {
       border: 1px solid black;
     }
+
+    @media (min-width: 320px) {
+      &:hover {
+        border: 1px solid transparent;
+      }
+    }
   }
   
 `;
@@ -51,7 +57,7 @@ export const UserList: FC<UserListProps> = ({ users, deleteUser, searchValue }) 
       <div className='user_list_wrapper'>
         {users.map((user, index) => {
           return (
-            <div title='show details' className='user_list' key={user.id}>
+            <div className='user_list' key={user.id}>
               <span>{++index}</span>
               <UserItem
                 searchValue={searchValue}

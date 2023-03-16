@@ -3,12 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import styled from '@emotion/styled';
 
-import './App.css';
-import { UserList, Search } from './components';
+import { UserList } from './components';
 import { AppDispatch, RootState } from "./redux/poviders/store/store";
 import { getUsers } from 'api/users/getUsersThunk';
 import { userActions } from "api/users/getUsersSlice";
-import { Loader } from "components/shared";
+import { Loader, Search } from "components/shared";
 
 const AppStyle = styled.div`
   display: flex;
@@ -17,6 +16,10 @@ const AppStyle = styled.div`
   align-items: center;
   margin-top: 20px;
   width: 100%;
+  
+  .details {
+    margin-top: 50px;
+  }
 `;
 
 export const App = () =>  {
@@ -77,16 +80,16 @@ export const App = () =>  {
       ) : (
         <>
           <Search searchValue={searchQuery} onChangeInput={onChangeInput} />
-            {!!users.length ? (
+            {!!tempUsers.length ? (
               <UserList
                 searchValue={searchQuery}
                 users={tempUsers}
                 deleteUser={deleteUser}/>
           ) : (
-              <>
+              <div className='details'>
                 <span>No result</span>
                 {error && <span>{error}</span>}
-              </>
+              </div>
             )}
         </>
       )}
