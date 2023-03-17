@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from "react";
 import styled from "@emotion/styled";
 
 import { User } from "types";
@@ -96,9 +96,9 @@ export const UserItem: FC<UserProps> = ({ user, deleteUser, searchValue }) => {
     deleteUser(id)
   }
 
-  const onToggleModal = () => {
+  const onToggleModal = useCallback(() => {
     setIsOpen(prev => !prev)
-  }
+  }, [isOpen])
 
   const replaceStringHelper = (temp: string | null) => {
     if (searchValue && temp?.includes(searchValue)){

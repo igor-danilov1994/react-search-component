@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import styled from '@emotion/styled';
@@ -53,7 +53,7 @@ export const App = () =>  {
     }
   }, [search, users] )
 
-  const onChangeInput = (value: string | null, clear?: boolean) => {
+  const onChangeInput = useCallback((value: string | null, clear?: boolean) => {
     if (value) {
       setSearchParams({ ['search']: value });
     } else {
@@ -65,11 +65,11 @@ export const App = () =>  {
     }
 
     setSearch(value);
-  };
+  }, [])
 
-  const deleteUser = (id: number) => {
+  const deleteUser = useCallback((id: number) => {
     dispatch(userActions.deleteUser(id))
-  }
+  }, [])
 
   return (
     <AppStyle>
