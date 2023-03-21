@@ -20,6 +20,12 @@ const AppStyle = styled.div`
   .details {
     margin-top: 50px;
   }
+  
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const App = () =>  {
@@ -71,28 +77,32 @@ export const App = () =>  {
     dispatch(userActions.deleteUser(id))
   }, [])
 
-  return (
-    <AppStyle>
-      {loading ? (
+  if (loading){
+    return (
+      <AppStyle>
         <div className='loading'>
           <Loader/>
         </div>
-      ) : (
-        <>
-          <Search searchValue={searchQuery} onChangeInput={onChangeInput} />
-            {!!tempUsers.length ? (
-              <UserList
-                searchValue={searchQuery}
-                users={tempUsers}
-                deleteUser={deleteUser}/>
-          ) : (
-              <div className='details'>
-                <span>No result</span>
-                {error && <span>{error}</span>}
-              </div>
-            )}
-        </>
-      )}
+      </AppStyle>
+    )
+  }
+
+  return (
+    <AppStyle>
+      <>
+        <Search searchValue={searchQuery} onChangeInput={onChangeInput} />
+        {!!tempUsers.length ? (
+          <UserList
+            searchValue={searchQuery}
+            users={tempUsers}
+            deleteUser={deleteUser}/>
+        ) : (
+          <div className='details'>
+            <span>No result</span>
+            {error && <span>{error}</span>}
+          </div>
+        )}
+      </>
     </AppStyle>
   );
 }
