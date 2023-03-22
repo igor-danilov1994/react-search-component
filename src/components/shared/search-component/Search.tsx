@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import styled from '@emotion/styled';
 import { SearchInput } from 'components';
 
@@ -24,11 +24,11 @@ const SearchStyle = styled.div`
   }
 `;
 
-export const Search: FC<IProps> = ({ searchValue, onChangeInput }) => {
+export const Search: FC<IProps> = memo(({ searchValue, onChangeInput }) => {
   return (
     <SearchStyle>
       <span>Search</span>
       <SearchInput valueInput={searchValue} onChangeInput={onChangeInput} />
     </SearchStyle>
   );
-};
+});

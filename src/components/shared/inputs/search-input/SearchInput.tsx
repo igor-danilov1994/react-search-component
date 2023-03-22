@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import styled from '@emotion/styled';
 
 import { Input } from 'components/shared';
@@ -55,7 +55,7 @@ const InputStyle = styled.div`
 export const SearchInput: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
   const [value, setValue] = useState(valueInput);
 
-  const onChangeHandler = (value: string) => {
+  const onChangeHandler = useCallback((value: string) => {
     setValue(value);
 
     if (!value.length){
@@ -63,7 +63,7 @@ export const SearchInput: FC<IProps> = ({ valueInput = '', onChangeInput }) => {
     }
 
     onChangeInput(value)
-  };
+  }, [value]);
 
   return (
     <InputStyle>

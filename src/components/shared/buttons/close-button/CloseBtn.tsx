@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 
 interface CloseBtnProps {
   onClick: () => void
 }
 
-export const CloseBtn: FC<CloseBtnProps> = (props) => {
+export const CloseBtn: FC<CloseBtnProps> = memo((props) => {
   const { onClick } = props
 
     return (
@@ -12,4 +12,4 @@ export const CloseBtn: FC<CloseBtnProps> = (props) => {
         <img src="./close.svg" alt="icon" />
       </button>
     );
-};
+});

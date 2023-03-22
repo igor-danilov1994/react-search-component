@@ -1,7 +1,7 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useCallback } from "react";
 import styled from "@emotion/styled";
-import { CloseBtn } from "components/shared/buttons";
 
+import { CloseBtn } from "components/shared/buttons";
 
 interface ModalProps {
     isOpen: boolean;
@@ -74,9 +74,9 @@ export const Modal: FC<ModalProps> = ({ children , isOpen, onClose }) => {
       e.stopPropagation();
     };
 
-    const onCloseHandler = () => {
+    const onCloseHandler = useCallback(() => {
       onClose()
-    }
+    }, [onClose])
 
     return (
       <ModalStyle>

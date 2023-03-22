@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, memo, useCallback, useState } from "react";
 import styled from "@emotion/styled";
 
 import { User } from "types";
@@ -88,13 +88,13 @@ const UserItemStyle = styled.div`
   }
 `;
 
-export const UserItem: FC<UserProps> = ({ user, deleteUser, searchValue }) => {
+export const UserItem: FC<UserProps> = memo(({ user, deleteUser, searchValue }) => {
   const [isOpen, setIsOpen] = useState(false)
   const { name, username, email, id, address, company } = user
 
-  const deleteUserItem = () => {
+  const deleteUserItem = useCallback(() => {
     deleteUser(id)
-  }
+  }, [id])
 
   const onToggleModal = useCallback(() => {
     setIsOpen(prev => !prev)
@@ -141,4 +141,4 @@ export const UserItem: FC<UserProps> = ({ user, deleteUser, searchValue }) => {
             )}
         </UserItemStyle>
     );
-};
+});
